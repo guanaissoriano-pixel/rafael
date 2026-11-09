@@ -30,3 +30,25 @@ REVOKE ALL ON public.carretinha_cash_closures FROM anon, authenticated;
 GRANT SELECT, INSERT, UPDATE ON public.carretinha_cash_closures TO anon, authenticated;
 
 REVOKE ALL ON public.carretinha_admin_settings FROM anon, authenticated;
+-- Garante que o RLS está ativo nas tabelas
+ALTER TABLE carretinha_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE carretinha_sales ENABLE ROW LEVEL SECURITY;
+ALTER TABLE carretinha_cash_closures ENABLE ROW LEVEL SECURITY;
+
+-- Remove políticas antigas se já existirem (para evitar conflito de duplicidade)
+DROP POLICY IF EXISTS "Acesso total em carretinha_sessions" ON carretinha_sessions;
+DROP POLICY IF EXISTS "Acesso total em carretinha_sales" ON carretinha_sales;
+DROP POLICY IF EXISTS "Acesso total em carretinha_cash_closures" ON carretinha_cash_closures;
+
+-- Cria novas políticas permitindo leitura, inserção, atualização e exclusão públicas
+CREATE POLICY "Acesso total em carretinha_sessions" 
+ON carretinha_sessions FOR ALL 
+USING (true) WITH CHECK (true);
+
+CREATE POLICY "Acesso total em carretinha_sales" 
+ON carretinha_sales FOR ALL 
+USING (true) WITH CHECK (true);
+
+CREATE POLICY "Acesso total em carretinha_cash_closures" 
+ON carretinha_cash_closures FOR ALL 
+USING (true) WITH CHECK (true);
